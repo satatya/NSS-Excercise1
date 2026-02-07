@@ -105,7 +105,7 @@ Follow these steps to deploy the configurations to the respective Virtual Machin
 1.  **Apply System Configuration:**
     Copy the router configuration to the system file and restart services.
     ```bash
-    cp freebsd_router_rc.conf /etc/rc.conf
+    cp rc.conf /etc/rc.conf
     service netif restart   # Apply network interface changes
     service routing restart # Apply routing table changes
     ```
