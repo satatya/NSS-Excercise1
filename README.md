@@ -95,6 +95,29 @@ Attempted to access the secret via the web server (`curl http://server/readsecre
 
 ---
 
+## 📂 File Manifest & Descriptions
+
+This repository contains the configuration files and scripts used to build the secure network environment.
+
+### **1. Router & Firewall (VM2 - FreeBSD)**
+* **`freebsd_router_rc.conf`**
+    * **Destination:** `/etc/rc.conf`
+    * **Purpose:** The main system configuration file. It sets static IPs for both network interfaces, enables the machine to act as a Gateway (router), and activates the Packet Filter (`pf`) firewall service.
+* **`pf.conf`**
+    * **Destination:** `/etc/pf.conf`
+    * **Purpose:** The core security policy. This file defines the rules for **Bidirectional NAT** (masking client IPs), **Port Forwarding** (redirecting web traffic), and the **"Default Deny"** firewall policy that blocks unauthorized access (like SSH).
+
+### **2. Server & Access Control (VM3 - Enterprise Server)**
+* **`setup_env.sh`**
+    * **Purpose:** An automation script that initializes the server environment. It creates the necessary users (`student`, `temphttp`), generates the sensitive data files, and applies the granular **Access Control Lists (ACLs)** to enforce specific read permissions.
+* **`readsecret.sh`**
+    * **Purpose:** A Proof-of-Concept (PoC) script used to audit OS security. It attempts to read the restricted `secret.txt` file using the **SetUID** bit, demonstrating how modern kernels (Linux/FreeBSD) ignore SetUID on shell scripts to prevent privilege escalation attacks.
+* **`run_server.py`**
+    * **Purpose:** A Python wrapper script to launch the HTTP server on Port 80. It serves the secure directory and allows us to test the Firewall and NAT rules from the Client machine.
+
+--- 
+
+
 ## 📦 Files Included in Submission
 1.  **MT25084_E1.pdf :** A single pdf file containing all the screenshots and explanations of the different sections given in our Excercise.
 
