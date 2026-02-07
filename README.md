@@ -95,6 +95,77 @@ Attempted to access the secret via the web server (`curl http://server/readsecre
 
 ---
 
+## 🚀 Deployment Instructions
+
+Follow these steps to deploy the configurations to the respective Virtual Machines.
+
+### **1. VM2: Router & Firewall Setup (FreeBSD)**
+*Run these commands as `root`.*
+
+1.  **Apply System Configuration:**
+    Copy the router configuration to the system file and restart services.
+    ```bash
+    cp freebsd_router_rc.conf /etc/rc.conf
+    service netif restart   # Apply network interface changes
+    service routing restart # Apply routing table changes
+    ```
+
+2.  **Apply Firewall Rules:**
+    Copy the PF configuration and load the rules.
+    ```bash
+    cp pf.conf /etc/pf.conf
+    pfctl -f /etc/pf.conf   # Load the rule set
+    pfctl -e                # Enable Packet Filter
+    ```
+
+### **2. VM3: Server & Access Control Setup**
+*Run these commands as `root`.*
+
+1.  **Initialize the Environment:**
+    Make the setup script executable and run it to create users and ACLs.
+    ```bash
+    chmod +x setup_env.sh
+    ./setup_env.sh
+    ```
+
+2.  **Start the Web Server:**
+    Run the Python wrapper to start listening on Port 80.
+    ```bash
+    # Run in background
+    python3 run_server.py &
+    ```
+
+3.  **Run Privilege Escalation Test (Part C):**
+    Attempt to read the secret file using the SetUID script (Expect Failure).
+    ```bash
+    chmod +x readsecret.sh
+    chmod 4755 readsecret.sh    # Set the SetUID bit
+    su - student                # Switch to 'student' user
+    ./readsecret.sh             # Execute the script
+    ```
+
+### **3. VM1: Verification (Client)**
+*Run these commands from the Client machine to test the security policies.*
+
+1.  **Test Connectivity:**
+    ```bash
+    ping -c 4 192.168.20.2   # Should succeed via Router
+    ```
+
+2.  **Test Web Access & NAT:**
+    ```bash
+    curl [http://192.168.20.2](http://192.168.20.2) # Should return directory listing
+    ```
+
+3.  **Test Firewall (SSH Blocking):**
+    ```bash
+    ssh student@192.168.20.2
+    # Should hang/timeout (Blocked by 'Default Deny' policy)
+    ```
+
+---
+
+
 ## 📂 File Manifest & Descriptions
 
 This repository contains the configuration files and scripts used to build the secure network environment.
