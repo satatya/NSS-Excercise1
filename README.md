@@ -132,7 +132,7 @@ Follow these steps to deploy the configurations to the respective Virtual Machin
     Run the Python wrapper to start listening on Port 80.
     ```bash
     # Run in background
-    python3 run_server.py &
+    python3 run_server.py
     ```
 
 3.  **Run Privilege Escalation Test (Part C):**
